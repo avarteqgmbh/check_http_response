@@ -13,4 +13,6 @@ Gem::Specification.new do |gem|
   gem.name          = "check_http_response"
   gem.require_paths = ["lib"]
   gem.version       = CheckHttpResponse::VERSION
+
+  gem.add_dependency "httparty", "~> 0.8.1"
 end
