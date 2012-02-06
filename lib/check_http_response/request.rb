@@ -20,13 +20,14 @@ module CheckHttpResponse
     #
     # Warning: '303 see other' is not supported
     #
-    #   response = CheckHttpResponse.for('http://localhost:8080/page/1',
+    #   response = CheckHttpResponse.for(
+    #     'http://localhost:8080/page/1',
     #     :headers => { 'Host' => 'www.mydomain.com' }
     #   )
     #   response.redirects_to?('http://www.mydomain.com/page/1/index.html') #=> true
     #
-    #   response.redirects_to?('http://www.nowhere.com/') #=> false
-    #   response.errors #=> { :redirect => "Wrong location" }
+    #   response.redirects_to?('http://nowhere.com/')                       #=> false
+    #   response.errors                                                     #=> { :redirect => "Wrong location" }
     #
     # ==== Options
     # <tt>:permanent</tt> Specifies whether the redirect should be 'permanent', default: true
