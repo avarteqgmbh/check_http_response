@@ -27,7 +27,7 @@ module CheckHttpResponse
     #   response.redirects_to?('http://www.mydomain.com/page/1/index.html') #=> true
     #
     #   response.redirects_to?('http://nowhere.com/')                       #=> false
-    #   response.errors                                                     #=> { :redirect => "Wrong location" }
+    #   response.errors                                                     #=> { :redirect => "Wrong location! Got: http://www.mydomain.com/page/1/index.html , expected: http://nowhere.com/" }
     #
     # ==== Options
     # <tt>:permanent</tt> Specifies whether the redirect should be 'permanent', default: true
@@ -46,7 +46,8 @@ module CheckHttpResponse
 
         @errors[:base] = "No redirect initiated"
       rescue HTTParty::RedirectionTooDeep => e
-        is_correct_location = location == e.response['location']
+        redirected_location = e.response['location']
+        is_correct_location = location == redirected_location
 
         is_correct_redirect = if check_permanent
                                 e.response.class == Net::HTTPMovedPermanently
@@ -55,8 +56,8 @@ module CheckHttpResponse
                               end
 
         redirected = is_correct_location && is_correct_redirect
-        @errors[:redirect] = "Wrong redirect type" if not is_correct_redirect
-        @errors[:redirect] = "Wrong location" if not is_correct_location
+        @errors[:redirect] = "Wrong redirect type!" if not is_correct_redirect
+        @errors[:redirect] = "Wrong location! Got: #{redirected_location} , expected: #{location}" if not is_correct_location
       end
 
       return redirected
